@@ -117,7 +117,29 @@ graph TD
 
 ## 🔄 Parte 3: Pipeline CI/CD Setup
 
-### Passo 4: Configurar GitHub Secrets
+### Passo 4: Criar Bucket S3 para Backend (Pré-requisito)
+
+> ⚠️ **IMPORTANTE**: O bucket S3 precisa existir ANTES de rodar a pipeline!
+
+**Linux/macOS:**
+```bash
+# Criar bucket para armazenar o state do Terraform
+aws s3 mb s3://fiap-terraform-state-dev --region us-east-1 --profile fiapaws
+
+# Verificar se foi criado
+aws s3 ls --profile fiapaws | grep fiap-terraform
+```
+
+**Windows (PowerShell):**
+```powershell
+# Criar bucket para armazenar o state do Terraform
+aws s3 mb s3://fiap-terraform-state-dev --region us-east-1 --profile fiapaws
+
+# Verificar se foi criado
+aws s3 ls --profile fiapaws | Select-String "fiap-terraform"
+```
+
+### Passo 5: Configurar GitHub Secrets
 
 ```bash
 # No GitHub: Settings > Secrets and variables > Actions
@@ -128,10 +150,10 @@ graph TD
 ```
 AWS_ACCESS_KEY_ID     = AKIA...
 AWS_SECRET_ACCESS_KEY = wJa...
-AWS_SESSION_TOKEN     = IQoJ... (se necessário)
+AWS_SESSION_TOKEN     = IQoJ... (obrigatório no Learner Lab)
 ```
 
-### Passo 5: Criar Pipeline Principal
+### Passo 6: Criar Pipeline Principal
 
 ```bash
 # Criar workflow principal
@@ -294,76 +316,61 @@ notepad .github/workflows/terraform-ci.yml
 
 ```mermaid
 flowchart LR
-    A[Push Code] --> B{Branch?}
-    B -->|PR| C[Validate]
-    B -->|main| D[Validate]
-    
-    C --> E[Format Check]
-    E --> F[Terraform Plan]
-    F --> G[Comment PR]
-    
-    D --> H[Format Check]
-    H --> I[Terraform Apply]
-    I --> J[Deploy Infra]
+    A[Criar Workflow] --> B[Push main]
+    B --> C[Pipeline Ativa]
+    C --> D[Testar Deploy]
 ```
 
-### Passo 9: Testar Pipeline com Pull Request
+### Passo 8: Subir Workflow para Main (PRIMEIRO!)
+
+> ⚠️ **IMPORTANTE**: O workflow precisa estar na branch `main` para o GitHub Actions reconhecer!
 
 ```bash
-# 1. Criar branch para teste
-git checkout -b feature/test-pipeline
-
-# 2. Fazer uma pequena mudança
-echo "# Test change" >> terraform/environments/development/README.md
-
-# 3. Commit e push
-git add .
-git commit -m "test: trigger pipeline validation"
-git push origin feature/test-pipeline
-```
-
-**O que acontece:**
-- ✅ Pipeline executa validação
-- ✅ Terraform fmt check
-- ✅ Terraform validate  
-- ✅ Terraform plan
-- ✅ Comentário no PR com o plan
-
-### Passo 10: Testar Deploy Automático
-
-```bash
-# 1. Fazer merge do PR (via GitHub UI)
-# 2. Ou push direto para main:
-
+# Garantir que está na main
 git checkout main
-git merge feature/test-pipeline
+
+# Adicionar o workflow
+git add .github/workflows/terraform-ci.yml
+git commit -m "ci: add terraform pipeline"
+git push origin main
+```
+
+### Passo 9: Testar Deploy Automático
+
+```bash
+# Fazer uma alteração no terraform para triggerar a pipeline
+echo "# Pipeline test $(date)" >> terraform/environments/development/main.tf
+
+# Commit e push
+git add .
+git commit -m "test: trigger terraform pipeline"
 git push origin main
 ```
 
 **O que acontece:**
-- ✅ Pipeline executa deploy
-- ✅ Terraform apply automático
+- ✅ Push para `main` com alteração em `terraform/**`
+- ✅ Pipeline é triggerada automaticamente
+- ✅ Terraform fmt, init, validate, plan, apply
 - ✅ Infraestrutura criada na AWS
-- ✅ Outputs disponíveis no GitHub
 
-### Passo 11: Monitorar Pipeline
+### Passo 10: Monitorar Pipeline
 
 **No GitHub Actions:**
 ```
-Actions > Terraform CI/CD > Ver execução
+GitHub > Actions > Terraform CI/CD > Ver execução
 
-✅ Validate (30s)
-✅ Plan (1m 30s) 
-✅ Apply (3m 45s)
+✅ Format Check
+✅ Init
+✅ Validate
+✅ Plan
+✅ Apply
+✅ Output (Summary)
 ```
 
 ```bash
 # Verificar recursos criados via AWS CLI
 aws ec2 describe-vpcs --filters "Name=tag:Project,Values=fiap-cicd" --profile fiapaws
 aws s3 ls --profile fiapaws | grep fiap-cicd
-
-# Ou via GitHub Actions Summary (recomendado)
-# Ver outputs na aba "Summary" da execução
 ```
 
 ---
