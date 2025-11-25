@@ -20,41 +20,6 @@ Ao final desta aula, você será capaz de:
 
 ---
 
-
-## ✅ Checklist de Aprendizado
-
-### Vídeo 5.1 - Terraform Básico
-- [ ] Instalar Terraform
-- [ ] Configurar AWS Provider
-- [ ] Criar backend S3 + DynamoDB
-- [ ] Executar `terraform init`
-- [ ] Executar `terraform plan`
-- [ ] Executar `terraform apply`
-- [ ] Ver outputs com `terraform output`
-- [ ] Criar pipeline CI/CD para Terraform
-- [ ] Testar workflow no GitHub Actions
-
-### Vídeo 5.2 - Multi-Ambientes
-- [ ] Criar workspaces (dev, staging, prod)
-- [ ] Configurar locals dinâmicos por ambiente
-- [ ] Implementar tags por ambiente
-- [ ] Criar pipeline multi-ambiente
-- [ ] Testar promoção entre ambientes
-- [ ] Verificar isolamento de state
-- [ ] Implementar conditional resources
-
-### Vídeo 5.3 - Módulos
-- [ ] Criar módulo VPC
-- [ ] Estruturar módulo (main, variables, outputs)
-- [ ] Usar módulo localmente
-- [ ] Testar módulo
-- [ ] Preparar módulo para publicação
-- [ ] Versionar módulo com Git tags
-- [ ] Publicar no Terraform Registry (opcional)
-- [ ] Implementar composição de módulos
-
----
-
 ## 🚨 Troubleshooting
 
 ### Erro 1: Backend S3 não encontrado
