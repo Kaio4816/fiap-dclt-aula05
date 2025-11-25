@@ -399,4 +399,16 @@ aws s3 ls --profile fiapaws | grep fiap-cicd
 
 ---
 
+## 🧹 Limpeza (Destruir Recursos)
+
+```bash
+cd terraform/environments/development
+terraform destroy -auto-approve
+
+# Verificar se foi destruído
+aws ec2 describe-vpcs --filters "Name=tag:Project,Values=fiap-cicd" --profile fiapaws
+```
+
+---
+
 **FIM DO VÍDEO 5.1** ✅

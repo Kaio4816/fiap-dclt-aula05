@@ -324,6 +324,19 @@ flowchart LR
 
 ---
 
+## 🧹 Limpeza (Destruir Recursos)
+
+```bash
+# Destruir staging
+cd terraform/environments/staging
+terraform destroy -auto-approve
+
+# Verificar se foi destruído
+aws ec2 describe-vpcs --filters "Name=tag:Environment,Values=staging" --profile fiapaws
+```
+
+---
+
 ## 🎬 Fim do Vídeo 5.2
 
 **Conceitos aprendidos:**

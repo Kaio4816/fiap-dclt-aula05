@@ -192,6 +192,19 @@ flowchart LR
 
 ---
 
+## 🧹 Limpeza (Destruir Recursos)
+
+```bash
+# Destruir recursos criados com módulos
+cd terraform/environments/modules
+terraform destroy -auto-approve
+
+# Verificar se foi destruído
+aws ec2 describe-vpcs --filters "Name=tag:Environment,Values=modules" --profile fiapaws
+```
+
+---
+
 ## 🎬 Fim do Vídeo 5.3
 
 **Conceitos aprendidos:**
