@@ -244,11 +244,39 @@ EOF
 New-Item -ItemType File -Path ".github/workflows/multi-env.yml"
 ```
 
+### Passo 8: Criar Buckets S3 para Backend (Pré-requisito)
+
+> ⚠️ **IMPORTANTE**: Os buckets S3 precisam existir ANTES de rodar a pipeline!
+
+**Linux/macOS:**
+```bash
+# Criar bucket para development
+aws s3 mb s3://fiap-terraform-state-dev --region us-east-1 --profile fiapaws
+
+# Criar bucket para staging
+aws s3 mb s3://fiap-terraform-state-staging --region us-east-1 --profile fiapaws
+
+# Verificar se foram criados
+aws s3 ls --profile fiapaws | grep fiap-terraform
+```
+
+**Windows (PowerShell):**
+```powershell
+# Criar bucket para development
+aws s3 mb s3://fiap-terraform-state-dev --region us-east-1 --profile fiapaws
+
+# Criar bucket para staging
+aws s3 mb s3://fiap-terraform-state-staging --region us-east-1 --profile fiapaws
+
+# Verificar se foram criados
+aws s3 ls --profile fiapaws | Select-String "fiap-terraform"
+```
+
 ---
 
 ## 🧪 Parte 5: Testar Pipeline Multi-Ambiente
 
-### Passo 8: Testar Deploy Development
+### Passo 9: Testar Deploy Development
 
 ```bash
 # Criar branch develop (se não existir)
@@ -266,7 +294,7 @@ git push origin develop
 # https://github.com/SEU_USUARIO/SEU_REPO/actions
 ```
 
-### Passo 9: Testar Deploy Staging
+### Passo 10: Testar Deploy Staging
 
 ```bash
 # Criar branch staging
@@ -284,7 +312,7 @@ git push origin staging
 # Ver pipeline no GitHub Actions
 ```
 
-### Passo 10: Verificar Deploys
+### Passo 11: Verificar Deploys
 
 ```bash
 # Ver recursos development
