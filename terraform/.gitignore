@@ -33,7 +33,10 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-*.csv
+
 
 # Ignore lock files (opcional - alguns times commitam)
-# .terraform.lock.hcl
+.terraform.lock.hcl
+
+# Ignore CSV files
+*.csv
